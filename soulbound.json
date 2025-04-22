@@ -1,0 +1,24 @@
+{
+    "name": "PoT GitHub Developer Badge",
+    "description": "A badge awarded to verified developers on GitHub for the PoT project.",
+    "image": "ipfs://bafkreifkisuugyll6jenaz5hp6ewdunnawjhyhhnjnhdiraakxoaq6tuou", 
+    "attributes": [
+      {
+        "trait_type": "GitHub Username",
+        "value": "emm653"
+      },
+      {
+        "trait_type": "Account Verified",
+        "value": "True"
+      },
+      {
+        "trait_type": "GitHub Account Creation Date",
+        "value": "2021-05-10"
+      },
+      {
+        "trait_type": "Project",
+        "value": "PoT Soulbound NFT"
+      }
+    ]
+  }
+  

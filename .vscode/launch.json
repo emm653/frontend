@@ -1,0 +1,29 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Launch Chrome",
+            "request": "launch",
+            "type": "chrome",
+            "url": "http://localhost:8080",
+            "webRoot": "${workspaceFolder}"
+        },
+        {
+            "name": "Attach to Chrome",
+            "port": 9222,
+            "request": "attach",
+            "type": "chrome",
+            "webRoot": "${workspaceFolder}"
+        },
+      {
+        "name": "Launch Chrome",
+        "type": "pwa-chrome", // Use pwa-chrome for Chrome
+        "request": "launch",
+        "url": "http://localhost:5500", // Change this to the URL you want to launch
+        "webRoot": "${workspaceFolder}",
+        "runtimeExecutable": "C:/Program Files/Google/Chrome/Application/chrome.exe", // Adjust this path if needed
+        "timeout": 30000
+      }
+    ]
+  }
+  
