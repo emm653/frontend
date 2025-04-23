@@ -1,53 +1,50 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>GitHub Verification & Minting</title>
- 
-
- 
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-  <h1>Welcome to the GitHub Verification and Minting Site</h1>
-  <h2>YOUR GITHUB MUST BE AT LEAST A YEAR OLD FOR VERIFICATION!</h2>
+<body class="bg-white text-gray-800 dark:bg-gray-900 dark:text-white transition-colors">
+  <div class="min-h-screen flex flex-col items-center justify-center px-4 py-8">
+    <div class="max-w-xl w-full bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 space-y-6">
+      <div class="flex justify-between items-center">
+        <h1 class="text-2xl font-bold">GitHub Verification & Minting</h1>
+        <button id="theme-toggle" class="bg-gray-200 dark:bg-gray-700 px-3 py-1 rounded-lg">🌓</button>
+      </div>
 
-  <!-- GitHub Login Button -->
-  <button id="github-login">Login with GitHub</button>
-  <p id="status-message"></p>
+      <h2 class="text-sm font-semibold text-red-600 dark:text-red-400 uppercase">Your GitHub must be at least a year old for verification!</h2>
 
-  <button id="githubLogoutBtn" style="display: none;">Disconnect GitHub</button>
+      <button id="github-login" class="w-full bg-black text-white py-2 rounded-xl hover:bg-gray-800 transition">Login with GitHub</button>
+      <p id="status-message" class="text-center text-sm"></p>
+      <button id="githubLogoutBtn" class="w-full bg-red-500 text-white py-2 rounded-xl hidden">Disconnect GitHub</button>
 
+      <div class="text-center">
+        <button id="metamask-login" class="bg-yellow-500 text-black px-4 py-2 rounded-xl hover:bg-yellow-400 transition">Connect MetaMask</button>
+        <p id="wallet-address" class="mt-2">Not connected</p>
+        <button id="disconnect-btn" class="bg-red-600 text-white px-4 py-2 rounded-xl mt-2 hidden">Disconnect MetaMask</button>
+      </div>
 
-  <!-- MetaMask Connection Button -->
-  <button id="metamask-login">Connect MetaMask</button>
-  <p id="wallet-address">Not connected</p>
-  <button id="disconnect-btn" style="display:none;">Disconnect MetaMask</button>
+      <div id="text" class="text-center"></div>
+      <button id="mint-button" class="w-full bg-green-600 text-white py-2 rounded-xl mt-4 hidden">Mint NFT</button>
+    </div>
+  </div>
 
-  
-  <div id="text"></div>
-  
-  <!-- Minting Button (hidden initially) -->
-  <button id="mint-button" style="display:none;">Mint NFT</button>
   <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
-
   <script>
-    // MetaMask Connection
     let web3;
     let userAccount;
 
-    // MetaMask Connection
-    document.getElementById("metamask-login").onclick = async function() {
+    document.getElementById("metamask-login").onclick = async function () {
       if (window.ethereum) {
         web3 = new Web3(window.ethereum);
         try {
-          // Request account access
           const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-          userAccount = accounts[0]; // Store the connected account
-          alert("MetaMask Connected: " + userAccount);
-          const shortAddress = userAccount.slice(0, 6) + "..." + userAccount.slice(-4); // Shortened address
+          userAccount = accounts[0];
+          const shortAddress = userAccount.slice(0, 6) + "..." + userAccount.slice(-4);
           document.getElementById("wallet-address").textContent = `Connected: ${shortAddress}`;
-          document.getElementById("disconnect-btn").style.display = "inline-block"; // Show disconnect button
+          document.getElementById("disconnect-btn").classList.remove("hidden");
         } catch (error) {
           alert("Please connect MetaMask");
         }
@@ -56,38 +53,35 @@
       }
     };
 
-    document.getElementById("disconnect-btn").onclick = function() {
-      userAccount = null; // Clear the account state
-      document.getElementById("wallet-address").textContent = "Not connected"; // Reset the address
-      document.getElementById("disconnect-btn").style.display = "none"; // Hide the disconnect button
+    document.getElementById("disconnect-btn").onclick = function () {
+      userAccount = null;
+      document.getElementById("wallet-address").textContent = "Not connected";
+      document.getElementById("disconnect-btn").classList.add("hidden");
     };
 
-    // GitHub OAuth Login
-    document.getElementById("github-login").onclick = function() {
+    document.getElementById("github-login").onclick = function () {
       window.location.href = "https://soulbound-nft-project.onrender.com/auth/github";
     };
 
-    // Handle redirection from backend (GitHub verification)
     document.addEventListener("DOMContentLoaded", () => {
-  const urlParams = new URLSearchParams(window.location.search);
-  const status = urlParams.get("status");
-  const githubUsername = urlParams.get("github");
+      const urlParams = new URLSearchParams(window.location.search);
+      const status = urlParams.get("status");
+      const githubUsername = urlParams.get("github");
 
-  if (status) {
-    const decodedStatus = decodeURIComponent(status.replace(/\+/g, ' '));
-    alert(`GitHub Login Result: ${decodedStatus}`);
+      if (status) {
+        const decodedStatus = decodeURIComponent(status.replace(/\+/g, ' '));
+        alert(`GitHub Login Result: ${decodedStatus}`);
 
-    if (decodedStatus === "Account Verified") {
-      document.getElementById("mint-button").style.display = "inline-block";
-      document.getElementById("status-message").textContent =  ` ✅ Github account "${githubUsername}" is verfied!`;
-    } else {
-      document.getElementById("status-message").textContent = `❌ GitHub account "${githubUsername}" is too new. Cannot mint.`;
-    }
-  }
-});
+        if (decodedStatus === "Account Verified") {
+          document.getElementById("mint-button").classList.remove("hidden");
+          document.getElementById("status-message").textContent = `✅ Github account "${githubUsername}" is verified!`;
+        } else {
+          document.getElementById("status-message").textContent = `❌ GitHub account "${githubUsername}" is too new. Cannot mint.`;
+        }
+      }
+    });
 
-
-    document.getElementById("mint-button").onclick = async function() {
+    document.getElementById("mint-button").onclick = async function () {
       if (!userAccount) {
         alert("Please connect your MetaMask wallet first!");
         return;
@@ -96,45 +90,28 @@
       const tokenURI = "ipfs://bafkreifkisuugyll6jenaz5hp6ewdunnawjhyhhnjnhdiraakxoaq6tuou";
       const contractAddress = "0x71251C2f0ee20509a980289B69F25ff038bed2B9";
       const contractABI = [
-        {
-          "inputs": [{ "internalType": "string", "name": "tokenURI", "type": "string" }],
-          "name": "mintBadge",
-          "outputs": [],
-          "stateMutability": "nonpayable",
-          "type": "function"
-        },
-        {
-          "inputs": [{ "internalType": "address", "name": "user", "type": "address" }],
-          "name": "verifyUser",
-          "outputs": [],
-          "stateMutability": "nonpayable",
-          "type": "function"
-        }
+        { "inputs": [{ "internalType": "string", "name": "tokenURI", "type": "string" }], "name": "mintBadge", "outputs": [], "stateMutability": "nonpayable", "type": "function" },
+        { "inputs": [{ "internalType": "address", "name": "user", "type": "address" }], "name": "verifyUser", "outputs": [], "stateMutability": "nonpayable", "type": "function" }
       ];
 
       try {
         const web3 = new Web3(window.ethereum);
         const contract = new web3.eth.Contract(contractABI, contractAddress);
-
-        // Step 1: Verify the user first
         await contract.methods.verifyUser(userAccount).send({ from: userAccount });
-        console.log(" ✅User verified");
-
-        // Step 2: Mint the NFT
+        console.log("✅ User verified");
         await contract.methods.mintBadge(tokenURI).send({ from: userAccount });
         alert("✅ NFT Minted Successfully!");
-        document.getElementById("mint-button").style.display = "none";
+        document.getElementById("mint-button").classList.add("hidden");
       } catch (error) {
         console.error("Transaction failed", error);
         alert("❌ Transaction failed: " + (error?.message || "Unknown error"));
       }
     };
-    // After successful mint
-    
 
+    // Toggle dark mode
+    document.getElementById("theme-toggle").onclick = function () {
+      document.body.classList.toggle("dark");
+    };
   </script>
-  
-
-  <script src="index.js"></script>
 </body>
 </html>
